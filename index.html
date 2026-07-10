@@ -115,7 +115,7 @@
   /* ---------------- hero ---------------- */
   .hero{
     position:relative; height:100vh; min-height:640px;
-    display:flex; align-items:flex-end;
+    display:flex; align-items:flex-start;
     background:var(--ink); color:var(--paper);
     overflow:hidden;
   }
@@ -128,7 +128,10 @@
     transform:scale(1.08);
     will-change:transform;
   }
-  .hero-content{ position:relative; z-index:2; padding:0 0 96px; width:100%; }
+  .hero-content{ position:relative; z-index:2; padding:160px 0 0; width:100%; }
+  @media (max-width:640px){
+    .hero-content{ padding:120px 0 0; }
+  }
   .hero .wrap{ display:flex; flex-direction:column; gap:22px; }
   .hero-eyebrow{ color:#eae7e4; }
   .hero h1{
