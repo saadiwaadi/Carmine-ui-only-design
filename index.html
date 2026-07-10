@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carmine — Automotive Atelier</title>
+<link rel="icon" href="images/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#fbfaf8;
+    --paper-dim:#f3f1ed;
+    --ink:#1a161a;
+    --charcoal:#2d2a27;
+    --crimson:#e11624;
+    --brick:#b52e2b;
+    --line: rgba(26,22,26,0.12);
+    --line-soft: rgba(251,250,248,0.14);
+    --ease: cubic-bezier(.16,.8,.28,1);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  #services, #work, #reserve { scroll-margin-top: 80px; }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--crimson); color:var(--paper);}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  :focus-visible{outline:2px solid var(--crimson); outline-offset:3px;}
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+
+  .wrap{ max-width:1240px; margin:0 auto; padding:0 48px; }
+  @media (max-width:720px){ .wrap{padding:0 24px;} }
+
+  /* ---------------- reveal on scroll ---------------- */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-line{ overflow:hidden; }
+  .reveal-line span{ display:inline-block; transform:translateY(110%); transition:transform .9s var(--ease); }
+  .reveal-line.in span{ transform:translateY(0); }
+
+  /* ---------------- nav ---------------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:200;
+    padding:26px 0;
+    transition:padding .5s var(--ease), background .5s var(--ease), border-color .5s var(--ease);
+    border-bottom:1px solid transparent;
+  }
+  header.solid{
+    padding:16px 0;
+    background:rgba(251,250,248,0.96);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  header .wrap{ display:flex; align-items:center; justify-content:space-between; }
+  .mark{
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    letter-spacing:0.04em;
+    font-weight:600;
+  }
+  header:not(.solid) .mark, header:not(.solid) nav a, header:not(.solid) .book-btn, header:not(.solid) .nav-toggle{ color:var(--paper); }
+  header.solid .mark, header.solid nav a, header.solid .book-btn, header.solid .nav-toggle{ color:var(--ink); }
+  #navToggle[aria-expanded="true"]{ color:var(--paper) !important; }
+  nav{ display:flex; gap:40px; align-items:center; }
+  nav a{ font-size:13px; letter-spacing:0.03em; position:relative; padding:4px 0; }
+  nav a::after{
+    content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+    background:currentColor; transform:scaleX(0); transform-origin:right; transition:transform .4s var(--ease);
+  }
+  nav a:hover::after{ transform:scaleX(1); transform-origin:left; }
+  .book-btn{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    border:1px solid currentColor; padding:11px 20px; border-radius:2px; transition:background .35s var(--ease), color .35s var(--ease);
+  }
+  header.solid .book-btn{ border-color:var(--ink); }
+  .book-btn:hover{ background:var(--crimson); border-color:var(--crimson); color:var(--paper) !important; }
+  .nav-toggle{ display:none; }
+  @media (max-width:860px){
+    nav{ position:fixed; inset:0; top:0; background:var(--ink); flex-direction:column; justify-content:center; gap:20px;
+         transform:translateY(-100%); transition:transform .5s var(--ease); z-index:150; }
+    nav.open{ transform:translateY(0); }
+    nav a, nav .book-btn{ color:var(--paper) !important; font-size:20px; display:block; width:100%; text-align:center; padding:12px 20px; }
+    nav .book-btn{ display:inline-block; width:auto; margin:0 auto; padding:12px 28px; }
+    .nav-toggle{
+      display:flex; flex-direction:column; justify-content:center; align-items:flex-end; gap:6px;
+      z-index:160; width:44px; height:44px; padding:10px; border:none; background:none;
+    }
+    .nav-toggle span{ width:24px; height:2px; background:currentColor; display:block; }
+  }
+
+  /* ---------------- hero ---------------- */
+  .hero{
+    position:relative; height:100vh; min-height:640px;
+    display:flex; align-items:flex-end;
+    background:var(--ink); color:var(--paper);
+    overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 78% 30%, rgba(225,22,36,0.22), transparent 60%),
+      linear-gradient(180deg, rgba(26,22,26,0.15) 0%, rgba(26,22,26,0.55) 55%, var(--ink) 100%),
+      url('images/hero-bg.jpg') center 62% / cover no-repeat;
+    transform:scale(1.08);
+    will-change:transform;
+  }
+  .hero-content{ position:relative; z-index:2; padding:0 0 96px; width:100%; }
+  .hero .wrap{ display:flex; flex-direction:column; gap:22px; }
+  .hero-eyebrow{ color:#eae7e4; }
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(64px, 12vw, 168px);
+    line-height:0.92;
+    letter-spacing:-0.01em;
+    font-variation-settings: "opsz" 144;
+  }
+  .hero-sub{
+    font-size:17px; font-weight:400; max-width:420px; color:#eae7e4;
+    padding-top:6px; line-height:1.55;
+  }
+
+  /* ---------------- philosophy ---------------- */
+  .philosophy{ padding:180px 0; background:var(--paper); }
+  .philosophy .wrap{ max-width:920px; }
+  .quote{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:clamp(28px, 4.4vw, 46px);
+    line-height:1.32;
+    color:var(--ink);
+    font-variation-settings: "opsz" 46;
+  }
+  .quote .accent{ color:var(--crimson); font-style:normal; }
+  .quote-meta{
+    display:flex; align-items:center; gap:16px; margin-top:48px; padding-top:28px; border-top:1px solid var(--line);
+  }
+  .quote-meta .dot{ width:6px; height:6px; background:var(--crimson); border-radius:50%; }
+  .quote-meta span{ color:var(--charcoal); font-weight:400; }
+
+  /* ---------------- section shell ---------------- */
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:64px; flex-wrap:wrap; }
+  .section-head h2{
+    font-family:'Fraunces', serif; font-weight:600;
+    font-size:clamp(34px, 4.6vw, 54px); line-height:1.02; letter-spacing:-0.01em;
+    font-variation-settings: "opsz" 54;
+  }
+  .section-head .eyebrow{ color:var(--crimson); margin-bottom:14px; display:block; }
+  .section-note{ max-width:320px; color:var(--charcoal); font-size:14px; line-height:1.6; font-weight:400; }
+
+  /* ---------------- services ---------------- */
+  .services{ padding:140px 0; background:var(--paper-dim); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .service-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); border-left:1px solid var(--line);
+  }
+  @media (max-width:980px){ .service-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .service-grid{ grid-template-columns:1fr; } }
+  .service{
+    border-right:1px solid var(--line);
+    padding:36px 28px 44px;
+    position:relative;
+    min-height:360px;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    overflow:hidden;
+    transition:background .5s var(--ease);
+  }
+  .service-img{
+    position:absolute; inset:0; opacity:0; transition:opacity .6s var(--ease), transform .8s var(--ease);
+    object-fit:cover; width:100%; height:100%; transform:scale(1.06);
+  }
+  .service:hover .service-img{ opacity:0.16; transform:scale(1); }
+  .service-num{ font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--crimson); position:relative; z-index:1; }
+  .service h3{
+    font-family:'Fraunces', serif; font-weight:600; font-size:23px; margin-top:20px; position:relative; z-index:1;
+  }
+  .service p{ font-size:13.5px; color:var(--charcoal); margin-top:12px; line-height:1.6; font-weight:400; position:relative; z-index:1; max-width:230px; }
+
+  /* ---------------- the work / dossier ---------------- */
+  .work{ padding:150px 0 140px; }
+  .work .wrap{ padding-right:0; }
+  .work .inner-wrap{ padding-left:48px; }
+  @media (max-width:720px){ .work .inner-wrap{ padding-left:24px; } }
+
+  .dossier-track{
+    display:flex; gap:2px; overflow-x:auto; scroll-snap-type:x mandatory;
+    padding-bottom:8px; padding-right:48px;
+    scrollbar-width:none;
+  }
+  .dossier-track::-webkit-scrollbar{ display:none; }
+  .dossier{
+    scroll-snap-align:start;
+    flex:0 0 auto;
+    width:min(72vw, 400px);
+    background:var(--ink); color:var(--paper);
+    border:1px solid var(--charcoal);
+  }
+  .dossier-photo{
+    height:230px; position:relative; overflow:hidden;
+  }
+  .dossier-photo img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .dossier-stamp{
+    position:absolute; top:16px; right:16px;
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.12em;
+    border:1px solid #9c9996; color:var(--paper);
+    padding:5px 9px; text-transform:uppercase; background:rgba(26,22,26,0.4); backdrop-filter:blur(3px);
+  }
+  .dossier-body{ padding:26px 26px 28px; }
+  .dossier-vehicle{ font-family:'Fraunces', serif; font-weight:600; font-size:19px; margin-bottom:18px; }
+  .dossier-row{ display:flex; justify-content:space-between; gap:16px; padding:11px 0; border-top:1px solid rgba(251,250,248,0.12); }
+  .dossier-row:first-of-type{ border-top:none; }
+  .dossier-row .label{ font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#9c9996; flex-shrink:0; }
+  .dossier-row .value{ font-size:12.5px; text-align:right; color:#eae7e4; font-weight:400; line-height:1.5; }
+  .dossier-rating{ font-family:'JetBrains Mono', monospace; color:var(--crimson); font-weight:500; }
+  .dossier-quote{ font-size:12.5px; font-style:italic; color:#cfcbca; margin-top:16px; padding-top:16px; border-top:1px solid rgba(251,250,248,0.12); line-height:1.6; }
+
+  .dossier-nav{ display:flex; gap:10px; margin-top:32px; }
+  .dossier-nav button{
+    width:44px; height:44px; border:1px solid var(--line); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; transition:background .35s var(--ease), border-color .35s var(--ease);
+  }
+  .dossier-nav button:hover{ background:var(--ink); border-color:var(--ink); }
+  .dossier-nav button:hover svg{ stroke:var(--paper); }
+  .dossier-nav svg{ stroke:var(--ink); transition:stroke .35s var(--ease); }
+
+  /* ---------------- reserve / booking ---------------- */
+  .reserve{ padding:150px 0 160px; background:var(--paper-dim); border-top:1px solid var(--line); }
+  .reserve-grid{ display:grid; grid-template-columns:320px 1fr; gap:0; border:1px solid var(--line); background:var(--paper); }
+  @media (max-width:900px){ .reserve-grid{ grid-template-columns:1fr; } }
+
+  .stepper{ border-right:1px solid var(--line); padding:44px 36px; }
+  @media (max-width:900px){
+    .stepper{
+      border-right:none; border-bottom:1px solid var(--line);
+      display:flex; gap:20px; overflow-x:auto; padding:20px 24px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .stepper::-webkit-scrollbar{ display:none; }
+  }
+  .step{
+    display:flex; gap:16px; align-items:flex-start; padding:20px 0; cursor:pointer; transition:opacity .4s var(--ease);
+  }
+  .step.locked{
+    opacity:0.45; cursor:not-allowed;
+  }
+  .step .step-num{
+    font-family:'Fraunces', serif; font-weight:600; font-size:22px; color:#b8aba9; flex-shrink:0; width:30px; transition:color .4s var(--ease);
+  }
+  .step .step-text .step-title{ font-size:14.5px; font-weight:500; margin-bottom:4px; color:#7d7a76; transition:color .4s var(--ease); }
+  .step .step-text .step-desc{ font-size:12px; color:#94918e; font-weight:400; line-height:1.5; max-width:200px; transition:color .4s var(--ease); }
+  .step.active .step-num{ color:var(--crimson); }
+  .step.active .step-text .step-title{ color:var(--ink); }
+  .step.active .step-text .step-desc{ color:var(--charcoal); }
+  @media (max-width:900px){ .step{ flex-direction:column; gap:8px; padding:0; flex-shrink:0; width:150px; } }
+
+  .step-progress{ position:relative; margin-left:15px; height:26px; }
+  .step-progress::before{ content:''; position:absolute; left:0; top:0; width:1px; height:100%; background:var(--line); }
+  @media (max-width:900px){ .step-progress{ display:none; } }
+
+  .panel-area{ padding:56px; position:relative; min-height:460px; }
+  @media (max-width:600px){ .panel-area{ padding:36px 24px; } }
+  .panel{ display:none; animation:panelIn .6s var(--ease); }
+  .panel.active{ display:block; }
+  @keyframes panelIn{ from{ opacity:0; transform:translateX(14px); } to{ opacity:1; transform:translateX(0); } }
+
+  .panel h3{ font-family:'Fraunces', serif; font-weight:600; font-size:26px; margin-bottom:10px; }
+  .panel .panel-note{ font-size:13px; color:var(--charcoal); margin-bottom:36px; font-weight:400; max-width:440px; line-height:1.6; }
+
+  .option-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:520px){ .option-grid{ grid-template-columns:1fr; } }
+  .option{
+    border:1px solid var(--line); padding:20px; cursor:pointer; transition:border-color .3s var(--ease), background .3s var(--ease);
+    position:relative;
+  }
+  .option.selected{ border-color:var(--ink); background:var(--ink); color:var(--paper); }
+  .option .opt-name{ font-size:14px; font-weight:500; }
+  .option .opt-price{ font-family:'JetBrains Mono', monospace; font-size:11px; margin-top:8px; color:#5c5956; }
+  .option.selected .opt-price{ color:#cfcbca; }
+
+  .field-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:520px){ .field-grid{ grid-template-columns:1fr; } }
+  .field{ display:flex; flex-direction:column; gap:8px; }
+  .field label{ font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--charcoal); }
+  .field input, .field select{
+    border:none; border-bottom:1px solid var(--line); background:transparent; padding:10px 0; font-family:'Work Sans'; font-size:16px;
+    transition:border-color .3s var(--ease);
+  }
+  .field input:focus, .field select:focus{ border-color:var(--crimson); outline:none; }
+
+  .time-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:6px; }
+  @media (max-width:600px){ .time-grid{ grid-template-columns:repeat(3,1fr); } }
+  .time{
+    font-family:'JetBrains Mono', monospace; font-size:12px; text-align:center;
+    display:flex; align-items:center; justify-content:center; min-height:44px;
+    border:1px solid var(--line); cursor:pointer; transition:all .3s var(--ease);
+  }
+  .time.selected{ background:var(--crimson); border-color:var(--crimson); color:var(--paper); }
+  .time.unavailable{
+    color:#a8a5a2;
+    border-color:#e0dedb;
+    background:#f2f0ec;
+    cursor:not-allowed;
+    text-decoration:line-through;
+  }
+
+  .panel-actions{ display:flex; justify-content:space-between; align-items:center; margin-top:44px; }
+  .btn-primary{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    background:var(--ink); color:var(--paper); padding:15px 30px; transition:background .35s var(--ease);
+  }
+  .btn-primary:hover{ background:var(--crimson); }
+  .btn-ghost{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--charcoal);
+    padding:15px 20px; min-height:44px; display:inline-flex; align-items:center; justify-content:center;
+  }
+  .btn-ghost:hover{ color:var(--ink); }
+
+  .ledger{ border:1px solid var(--line); padding:0; }
+  .ledger-row{ display:flex; justify-content:space-between; padding:16px 22px; border-bottom:1px solid var(--line); font-size:13.5px; }
+  .ledger-row:last-child{ border-bottom:none; }
+  .ledger-row .l-label{ color:var(--charcoal); font-weight:400; }
+  .ledger-row .l-value{ font-weight:500; text-align:right; }
+  .confirm-banner{ display:flex; align-items:center; gap:16px; margin-bottom:32px; }
+  .confirm-dot{ width:8px; height:8px; border-radius:50%; background:var(--crimson); flex-shrink:0; }
+
+  /* Success Confirmation Animation */
+  .success-icon {
+    width: 32px;
+    height: 32px;
+    display: block;
+    flex-shrink: 0;
+  }
+  .success-circle {
+    stroke: var(--crimson);
+    stroke-width: 4;
+    stroke-dasharray: 157;
+    stroke-dashoffset: 157;
+    animation: drawCircle 0.5s var(--ease) forwards;
+  }
+  .success-check {
+    stroke: var(--crimson);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: drawCheck 0.3s var(--ease) 0.3s forwards;
+  }
+  @keyframes drawCircle {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .success-circle, .success-check {
+      stroke-dashoffset: 0 !important;
+      animation: none !important;
+    }
+  }
+
+  /* ---------------- footer ---------------- */
+  footer{ background:var(--ink); color:var(--paper); padding:90px 0 40px; }
+  .footer-top{ display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; padding-bottom:64px; border-bottom:1px solid var(--line-soft); }
+  .footer-mark{ font-family:'Fraunces', serif; font-weight:600; font-size:32px; }
+  .footer-cols{ display:flex; gap:80px; flex-wrap:wrap; }
+  .footer-col h4{ font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9c9996; margin-bottom:18px; }
+  .footer-col p, .footer-col a{ font-size:13.5px; line-height:2; color:#eae7e4; display:block; font-weight:400; }
+  .footer-col a:hover{ color:var(--crimson); }
+  .footer-bottom{ display:flex; justify-content:space-between; padding-top:28px; color:#8c8884; font-size:12px; flex-wrap:wrap; gap:12px; }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <a class="mark" href="#top">Carmine</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="siteNav">
+      <a href="#services">Services</a>
+      <a href="#work">The Work</a>
+      <a href="#reserve">Reserve</a>
+      <a class="book-btn" href="#reserve">Book a Visit</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <div class="wrap">
+      <div class="eyebrow hero-eyebrow reveal">Private Automotive Atelier</div>
+      <h1 class="reveal-line"><span>Carmine</span></h1>
+      <p class="hero-sub reveal">Diagnostic care, coachwork, and restoration for cars<br>that were never meant to be ordinary.</p>
+    </div>
+  </div>
+</section>
+
+<section class="philosophy">
+  <div class="wrap">
+    <p class="quote reveal">We do not fix cars.<br>We restore <span class="accent">the reason</span> you bought one.</p>
+    <div class="quote-meta reveal">
+      <span class="dot"></span>
+      <span class="eyebrow">Est. by a small team of mechanics and one obsessive detailer</span>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">What We Do</span>
+        <h2>Four disciplines,<br>one standard.</h2>
+      </div>
+      <p class="section-note">Every car that enters the atelier is treated as the only one in the building that day.</p>
+    </div>
+  </div>
+  <div class="service-grid wrap" style="padding:0;">
+    <div class="service reveal">
+      <img class="service-img" src="images/service-diagnostic.jpg" alt="Diagnostic &amp; Mechanical Care" width="280" height="360" loading="lazy">
+      <span class="service-num">01</span>
+      <h3>Diagnostic &amp; Mechanical Care</h3>
+      <p>Full inspection and precision repair, from a persistent rattle to a full engine rebuild.</p>
+    </div>
+    <div class="service reveal">
+      <img class="service-img" src="images/service-detailing.jpg" alt="Coachwork &amp; Detailing" width="280" height="360" loading="lazy">
+      <span class="service-num">02</span>
+      <h3>Coachwork &amp; Detailing</h3>
+      <p>Paint correction, ceramic protection, and interior restoration by hand.</p>
+    </div>
+    <div class="service reveal">
+      <img class="service-img" src="images/service-restoration.jpg" alt="Bespoke Restoration" width="280" height="360" loading="lazy">
+      <span class="service-num">03</span>
+      <h3>Bespoke Restoration</h3>
+      <p>Ground-up restorations for classic and rare marques, documented from teardown to reveal.</p>
+    </div>
+    <div class="service reveal">
+      <img class="service-img" src="images/service-concierge.jpg" alt="Concierge Collection" width="280" height="360" loading="lazy">
+      <span class="service-num">04</span>
+      <h3>Concierge Collection</h3>
+      <p>We collect, deliver, and store your car, so the atelier is the only place it needs to go.</p>
+    </div>
+  </div>
+</section>
+
+<section class="work" id="work">
+  <div class="wrap" style="padding-right:0;">
+    <div class="inner-wrap">
+      <div class="section-head reveal" style="padding-right:48px;">
+        <div>
+          <span class="eyebrow">The Work</span>
+          <h2>What we found,<br>what we did.</h2>
+        </div>
+        <p class="section-note">A record of recent cars through the atelier — the issue reported, the fix delivered, and the owner's own rating.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="inner-wrap reveal">
+    <div class="dossier-track" id="dossierTrack">
+
+      <div class="dossier">
+        <div class="dossier-photo">
+          <img src="images/mercedes-300ce.png" alt="1991 Mercedes 300CE" width="400" height="230" loading="lazy">
+          <span class="dossier-stamp">Closed — 9 days</span>
+        </div>
+        <div class="dossier-body">
+          <div class="dossier-vehicle">1991 Mercedes 300CE</div>
+          <div class="dossier-row"><span class="label">Reported</span><span class="value">Hesitation on cold start, uneven idle</span></div>
+          <div class="dossier-row"><span class="label">Resolution</span><span class="value">Rebuilt fuel distributor, replaced idle control valve</span></div>
+          <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">4.9 / 5.0</span></div>
+          <p class="dossier-quote">"It starts like it did in 1991. Better, honestly."</p>
+        </div>
+      </div>
+ 
+      <div class="dossier">
+        <div class="dossier-photo">
+          <img src="images/porsche-911-gts.png" alt="2019 Porsche 911 GTS" width="400" height="230" loading="lazy">
+          <span class="dossier-stamp">Closed — 4 days</span>
+        </div>
+        <div class="dossier-body">
+          <div class="dossier-vehicle">2019 Porsche 911 GTS</div>
+          <div class="dossier-row"><span class="label">Reported</span><span class="value">Swirl marks and clouded headlights</span></div>
+          <div class="dossier-row"><span class="label">Resolution</span><span class="value">Two-stage paint correction, ceramic coat, headlight restoration</span></div>
+          <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">5.0 / 5.0</span></div>
+          <p class="dossier-quote">"Looked newer than the day I bought it."</p>
+        </div>
+      </div>
+ 
+      <div class="dossier">
+        <div class="dossier-photo">
+          <img src="images/jaguar-e-type.png" alt="1974 Jaguar E-Type" width="400" height="230" loading="lazy">
+          <span class="dossier-stamp">Closed — 22 days</span>
+        </div>
+        <div class="dossier-body">
+          <div class="dossier-vehicle">1974 Jaguar E-Type</div>
+          <div class="dossier-row"><span class="label">Reported</span><span class="value">Full restoration after 30 years in storage</span></div>
+          <div class="dossier-row"><span class="label">Resolution</span><span class="value">Engine rebuild, wiring loom replaced, interior re-trimmed</span></div>
+          <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">5.0 / 5.0</span></div>
+          <p class="dossier-quote">"My father's car is finally mine to drive."</p>
+        </div>
+      </div>
+ 
+      <div class="dossier">
+        <div class="dossier-photo">
+          <img src="images/range-rover.png" alt="2021 Range Rover Sport" width="400" height="230" loading="lazy">
+          <span class="dossier-stamp">Closed — 2 days</span>
+        </div>
+        <div class="dossier-body">
+          <div class="dossier-vehicle">2021 Range Rover Sport</div>
+          <div class="dossier-row"><span class="label">Reported</span><span class="value">Air suspension fault, dashboard warning</span></div>
+          <div class="dossier-row"><span class="label">Resolution</span><span class="value">Replaced rear air spring, recalibrated ride height sensors</span></div>
+          <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">4.8 / 5.0</span></div>
+          <p class="dossier-quote">"Explained the fix before I even asked."</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="dossier-nav">
+      <button id="dossierPrev" aria-label="Previous">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button id="dossierNext" aria-label="Next">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="reserve" id="reserve">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Reserve a Visit</span>
+        <h2>Four steps.<br>No guesswork.</h2>
+      </div>
+      <p class="section-note">Tell us what the car needs, when you can bring it, and we'll confirm the rest before you arrive.</p>
+    </div>
+
+    <div class="reserve-grid reveal">
+      <div class="stepper" id="stepper">
+        <div class="step active" data-step="1">
+          <span class="step-num">01</span>
+          <div class="step-text"><div class="step-title">Select Service</div><div class="step-desc">Choose what the car needs today.</div></div>
+        </div>
+        <div class="step-progress"></div>
+        <div class="step" data-step="2">
+          <span class="step-num">02</span>
+          <div class="step-text"><div class="step-title">Vehicle Details</div><div class="step-desc">Make, model, and year.</div></div>
+        </div>
+        <div class="step-progress"></div>
+        <div class="step" data-step="3">
+          <span class="step-num">03</span>
+          <div class="step-text"><div class="step-title">Date &amp; Time</div><div class="step-desc">Pick a slot at the atelier.</div></div>
+        </div>
+        <div class="step-progress"></div>
+        <div class="step" data-step="4">
+          <span class="step-num">04</span>
+          <div class="step-text"><div class="step-title">Confirm</div><div class="step-desc">Review and lock it in.</div></div>
+        </div>
+      </div>
+
+      <div class="panel-area">
+
+        <div class="panel active" data-panel="1">
+          <h3>What does the car need?</h3>
+          <p class="panel-note">Select one. If more than one applies, choose the primary concern — we'll cover the rest during intake.</p>
+          <div class="option-grid" id="serviceOptions">
+            <div class="option selected" data-name="Diagnostic & Mechanical Care" data-price="From $150">
+              <div class="opt-name">Diagnostic &amp; Mechanical Care</div><div class="opt-price">From $150</div>
+            </div>
+            <div class="option" data-name="Coachwork & Detailing" data-price="From $250">
+              <div class="opt-name">Coachwork &amp; Detailing</div><div class="opt-price">From $250</div>
+            </div>
+            <div class="option" data-name="Bespoke Restoration" data-price="Quoted after intake">
+              <div class="opt-name">Bespoke Restoration</div><div class="opt-price">Quoted after intake</div>
+            </div>
+            <div class="option" data-name="Concierge Collection" data-price="From $75">
+              <div class="opt-name">Concierge Collection</div><div class="opt-price">From $75</div>
+            </div>
+          </div>
+          <div class="panel-actions">
+            <span></span>
+            <button class="btn-primary" data-next="2">Continue</button>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="2">
+          <h3>Tell us about the car.</h3>
+          <p class="panel-note">The more precise this is, the less time we spend guessing on the day you arrive.</p>
+          <div class="field-grid">
+            <div class="field"><label>Make</label><input type="text" id="carMake" placeholder="e.g. Porsche"></div>
+            <div class="field"><label>Model</label><input type="text" id="carModel" placeholder="e.g. 911 Carrera"></div>
+            <div class="field"><label>Year</label><input type="text" id="carYear" placeholder="e.g. 2019"></div>
+            <div class="field"><label>Mileage</label><input type="text" id="carMileage" placeholder="e.g. 42,000 miles"></div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn-ghost" data-back="1">Back</button>
+            <button class="btn-primary" data-next="3">Continue</button>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="3">
+          <h3>Choose a date and time.</h3>
+          <p class="panel-note">Slots reflect the atelier's real capacity — only one car is worked at a time per bay.</p>
+          <div class="field" style="margin-bottom:26px; max-width:240px;">
+            <label>Date</label>
+            <input type="text" id="carDate" placeholder="Tue, 14 July" value="Tue, 14 July">
+          </div>
+          <label class="eyebrow" style="color:var(--charcoal); display:block; margin-bottom:10px;">Available Slots</label>
+          <div class="time-grid" id="timeGrid">
+            <div class="time">09:00</div>
+            <div class="time selected">10:30</div>
+            <div class="time">12:00</div>
+            <div class="time unavailable">13:30</div>
+            <div class="time">15:00</div>
+            <div class="time unavailable">16:30</div>
+            <div class="time">18:00</div>
+            <div class="time">19:30</div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn-ghost" data-back="2">Back</button>
+            <button class="btn-primary" data-next="4">Continue</button>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="4">
+          <h3>Confirm your reservation.</h3>
+          <p class="panel-note">Nothing is charged today. A member of the atelier will call to confirm intake within one business day.</p>
+          <div class="ledger" style="margin-bottom:30px;">
+            <div class="ledger-row"><span class="l-label">Service</span><span class="l-value" id="sumService">Diagnostic &amp; Mechanical Care</span></div>
+            <div class="ledger-row"><span class="l-label">Vehicle</span><span class="l-value" id="sumVehicle">—</span></div>
+            <div class="ledger-row"><span class="l-label">Date</span><span class="l-value" id="sumDate">Tue, 14 July</span></div>
+            <div class="ledger-row"><span class="l-label">Time</span><span class="l-value" id="sumTime">10:30</span></div>
+            <div class="ledger-row"><span class="l-label">Estimate</span><span class="l-value" id="sumPrice">From $150</span></div>
+          </div>
+          <div class="field-grid">
+            <div class="field"><label>Full Name</label><input type="text" placeholder="Your name"></div>
+            <div class="field"><label>Phone</label><input type="text" placeholder="(512) 555-0199"></div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn-ghost" data-back="3">Back</button>
+            <button class="btn-primary" id="confirmBtn">Reserve My Slot</button>
+          </div>
+        </div>
+
+        <div class="panel" data-panel="done">
+          <div class="confirm-banner">
+            <svg class="success-icon" viewBox="0 0 52 52" aria-hidden="true">
+              <circle class="success-circle" cx="26" cy="26" r="25" fill="none"/>
+              <path class="success-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+            <h3 style="margin:0;">Reservation received.</h3>
+          </div>
+          <p class="panel-note">We'll call to confirm intake details. Your slot is held for 24 hours.</p>
+          <div class="ledger">
+            <div class="ledger-row"><span class="l-label">Confirmation</span><span class="l-value">CRM-08421</span></div>
+            <div class="ledger-row"><span class="l-label">Service</span><span class="l-value" id="doneService">—</span></div>
+            <div class="ledger-row"><span class="l-label">Arrive</span><span class="l-value" id="doneDate">—</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-mark">Carmine</div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Atelier</h4>
+          <p>South Congress<br>Austin, TX</p>
+        </div>
+        <div class="footer-col">
+          <h4>Hours</h4>
+          <p>Tue — Sun, 09:00 – 20:00<br>Closed Mondays</p>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="tel:+15125550199">(512) 555-0199</a>
+          <a href="mailto:concierge@carmineatelier.com">concierge@carmineatelier.com</a>
+          <a href="#reserve" style="margin-top:12px; text-decoration:underline;">Reserve a Visit</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Carmine Automotive Atelier</span>
+      <span>Design mockup — South Congress, Austin, TX</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Header solid state
+  const header = document.getElementById('siteHeader');
+  function updateHeaderSolid() {
+    header.classList.toggle('solid', window.scrollY > 60);
+  }
+  window.addEventListener('scroll', updateHeaderSolid, { passive:true });
+  window.addEventListener('load', updateHeaderSolid);
+  document.addEventListener('DOMContentLoaded', updateHeaderSolid);
+  updateHeaderSolid();
+
+  // Mobile nav
+  const navToggle = document.getElementById('navToggle');
+  const siteNav = document.getElementById('siteNav');
+  navToggle.addEventListener('click', () => {
+    const open = siteNav.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+  });
+  siteNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    siteNav.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  }));
+
+  // Hero parallax (disabled on mobile for performance/smoothness)
+  const heroBg = document.getElementById('heroBg');
+  window.addEventListener('scroll', () => {
+    if (window.innerWidth > 768) {
+      const y = window.scrollY;
+      if (y < window.innerHeight) heroBg.style.transform = `scale(1.08) translateY(${y * 0.12}px)`;
+    } else {
+      heroBg.style.transform = '';
+    }
+  }, { passive:true });
+
+  // Scroll reveal (optimized threshold for mobile viewports)
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold:0.08 });
+  document.querySelectorAll('.reveal, .reveal-line').forEach(el => io.observe(el));
+
+  // Dossier slider
+  const track = document.getElementById('dossierTrack');
+  const cardWidth = () => track.querySelector('.dossier').offsetWidth + 2;
+  document.getElementById('dossierNext').addEventListener('click', () => track.scrollBy({ left: cardWidth(), behavior:'smooth' }));
+  document.getElementById('dossierPrev').addEventListener('click', () => track.scrollBy({ left: -cardWidth(), behavior:'smooth' }));
+
+  // Service option select
+  let selectedService = { name:'Diagnostic & Mechanical Care', price:'From $150' };
+  document.querySelectorAll('#serviceOptions .option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#serviceOptions .option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedService = { name: opt.dataset.name, price: opt.dataset.price };
+      updateStepLockStates();
+    });
+  });
+
+  // Time slot select
+  let selectedTime = '10:30';
+  document.querySelectorAll('.time:not(.unavailable)').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.time').forEach(o => o.classList.remove('selected'));
+      t.classList.add('selected');
+      selectedTime = t.textContent.trim();
+      updateStepLockStates();
+    });
+  });
+
+  // Stepper logic & Validation
+  const steps = document.querySelectorAll('.step');
+  const panels = document.querySelectorAll('.panel');
+
+  function isStepValid(stepNum) {
+    if (stepNum === 1) {
+      return true; // Service is selected by default
+    }
+    if (stepNum === 2) {
+      const make = document.getElementById('carMake').value.trim();
+      const model = document.getElementById('carModel').value.trim();
+      const year = document.getElementById('carYear').value.trim();
+      const mileage = document.getElementById('carMileage').value.trim();
+      return make !== '' && model !== '' && year !== '' && mileage !== '';
+    }
+    if (stepNum === 3) {
+      const date = document.getElementById('carDate').value.trim();
+      return date !== '' && selectedTime !== '';
+    }
+    return true;
+  }
+
+  function canGoTo(targetStep) {
+    targetStep = parseInt(targetStep);
+    if (isNaN(targetStep)) return true; // 'done'
+    for (let s = 1; s < targetStep; s++) {
+      if (!isStepValid(s)) return false;
+    }
+    return true;
+  }
+
+  function highlightErrors() {
+    const currentActiveStep = document.querySelector('.step.active');
+    if (!currentActiveStep) return;
+    const currentStepNum = parseInt(currentActiveStep.dataset.step);
+    if (currentStepNum === 2) {
+      const fields = ['carMake', 'carModel', 'carYear', 'carMileage'];
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el.value.trim() === '') {
+          el.style.borderBottomColor = 'var(--crimson)';
+        } else {
+          el.style.borderBottomColor = '';
+        }
+      });
+    } else if (currentStepNum === 3) {
+      const dateEl = document.getElementById('carDate');
+      if (dateEl.value.trim() === '') {
+        dateEl.style.borderBottomColor = 'var(--crimson)';
+      }
+    }
+  }
+
+  function updateStepLockStates() {
+    steps.forEach(s => {
+      const stepNum = parseInt(s.dataset.step);
+      if (canGoTo(stepNum)) {
+        s.classList.remove('locked');
+      } else {
+        s.classList.add('locked');
+      }
+    });
+  }
+
+  function goTo(stepNum){
+    if (!canGoTo(stepNum)) {
+      highlightErrors();
+      return;
+    }
+    steps.forEach(s => s.classList.toggle('active', s.dataset.step === String(stepNum)));
+    panels.forEach(p => p.classList.toggle('active', p.dataset.panel === String(stepNum)));
+    updateStepLockStates();
+  }
+
+  steps.forEach(s => s.addEventListener('click', () => goTo(s.dataset.step)));
+
+  document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', (e) => {
+    const target = b.dataset.next;
+    if (canGoTo(target)) {
+      goTo(target);
+    } else {
+      e.preventDefault();
+      highlightErrors();
+    }
+  }));
+
+  document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => goTo(b.dataset.back)));
+
+  document.getElementById('confirmBtn').addEventListener('click', (e) => {
+    if (!isStepValid(2) || !isStepValid(3)) {
+      e.preventDefault();
+      highlightErrors();
+      return;
+    }
+    const make = document.getElementById('carMake').value || 'Your vehicle';
+    const model = document.getElementById('carModel').value || '';
+    const date = document.getElementById('carDate').value || 'Tue, 14 July';
+    const vehicle = (make + ' ' + model).trim();
+
+    document.getElementById('sumService').textContent = selectedService.name;
+    document.getElementById('sumVehicle').textContent = vehicle || '—';
+    document.getElementById('sumDate').textContent = date;
+    document.getElementById('sumTime').textContent = selectedTime;
+    document.getElementById('sumPrice').textContent = selectedService.price;
+
+    document.getElementById('doneService').textContent = selectedService.name;
+    document.getElementById('doneDate').textContent = date + ', ' + selectedTime;
+
+    panels.forEach(p => p.classList.remove('active'));
+    document.querySelector('[data-panel="done"]').classList.add('active');
+    steps.forEach(s => s.classList.remove('active'));
+  });
+
+  // Keep summary in sync & update locks
+  ['carMake','carModel','carYear','carMileage'].forEach(id => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      e.target.style.borderBottomColor = '';
+      const make = document.getElementById('carMake').value;
+      const model = document.getElementById('carModel').value;
+      document.getElementById('sumVehicle').textContent = (make + ' ' + model).trim() || '—';
+      updateStepLockStates();
+    });
+  });
+
+  document.getElementById('carDate').addEventListener('input', (e) => {
+    e.target.style.borderBottomColor = '';
+    updateStepLockStates();
+  });
+
+  // Call initially to lock subsequent steps
+  updateStepLockStates();
+</script>
+
+</body>
+</html>
