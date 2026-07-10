@@ -98,6 +98,9 @@
   header.solid + #siteNav a, header.solid + #siteNav .book-btn{ color:var(--ink); }
 
   #navToggle[aria-expanded="true"]{ color:var(--paper) !important; }
+  #navToggle[aria-expanded="true"] span:nth-child(1){ transform: translateY(8px) rotate(45deg); }
+  #navToggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+  #navToggle[aria-expanded="true"] span:nth-child(3){ transform: translateY(-8px) rotate(-45deg); }
 
   #siteNav a{ font-size:13px; letter-spacing:0.03em; position:relative; padding:4px 0; }
   #siteNav a::after{
@@ -137,7 +140,18 @@
       display:flex; flex-direction:column; justify-content:center; align-items:flex-end; gap:6px;
       z-index:160; width:44px; height:44px; padding:10px; border:none; background:none;
     }
-    .nav-toggle span{ width:24px; height:2px; background:currentColor; display:block; }
+    .nav-toggle span{
+      width:24px; height:2px; background:currentColor; display:block;
+      transition: transform .3s var(--ease), opacity .3s var(--ease);
+    }
+  }
+
+  @media (max-width:860px) and (orientation:landscape){
+    .nav-toggle{ width:38px; height:38px; padding:8px; }
+    .nav-toggle span{ height:1.5px; }
+    header{ padding:14px 0; }
+    header.solid{ padding:10px 0; }
+    .mark{ font-size:18px; }
   }
 
   /* ---------------- hero ---------------- */
@@ -816,7 +830,7 @@
   const siteNav = document.getElementById('siteNav');
   navToggle.addEventListener('click', () => {
     const open = siteNav.classList.toggle('open');
-    navToggle.setAttribute('aria-expanded', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
   siteNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
     siteNav.classList.remove('open');
