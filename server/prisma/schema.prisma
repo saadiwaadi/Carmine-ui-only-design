@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  numberLabel String   @default("01")
+  title       String
+  description String
+  imageUrl    String
+  priceLabel  String   @default("Contact for quote")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WorkItem {
+  id          Int      @id @default(autoincrement())
+  vehicle     String
+  imageUrl    String
+  statusLabel String
+  reported    String
+  resolution  String
+  rating      Float
+  quote       String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Reservation {
+  id               Int      @id @default(autoincrement())
+  serviceName      String
+  servicePrice     String
+  make             String
+  model            String
+  year             String
+  mileage          String
+  date             String
+  time             String
+  fullName         String
+  phone            String
+  status           String   @default("pending")
+  confirmationCode String   @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  authorName String
+  vehicle    String?
+  rating     Int
+  comment    String
+  approved   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

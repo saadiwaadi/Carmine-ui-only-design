@@ -27,7 +27,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   html{scroll-behavior:smooth;}
-  #services, #work, #reserve { scroll-margin-top: 80px; }
+  #services, #work, #reviews, #reserve { scroll-margin-top: 80px; }
   body{
     background:var(--paper);
     color:var(--ink);
@@ -333,6 +333,28 @@
   .dossier-nav button:hover svg{ stroke:var(--paper); }
   .dossier-nav svg{ stroke:var(--ink); transition:stroke .35s var(--ease); }
 
+  /* ---------------- reviews ---------------- */
+  .reviews{ padding:140px 0; background:var(--paper); }
+  .review-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:2px;
+    background:var(--line); border:1px solid var(--line); margin-bottom:96px;
+  }
+  @media (max-width:900px){ .review-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .review-grid{ grid-template-columns:1fr; } }
+  .review-card{ background:var(--paper); padding:30px 26px; display:flex; flex-direction:column; gap:14px; }
+  .review-card .review-stars{ font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--crimson); letter-spacing:0.08em; }
+  .review-card .review-comment{ font-size:14px; line-height:1.65; color:var(--ink); font-weight:400; flex:1; }
+  .review-card .review-meta{ font-size:12px; color:var(--charcoal); font-weight:500; }
+  .review-card .review-meta .review-vehicle{ color:#8c8884; font-weight:400; }
+
+  .review-form-wrap{ max-width:640px; border:1px solid var(--line); padding:48px; background:var(--paper-dim); }
+  @media (max-width:600px){ .review-form-wrap{ padding:28px 24px; } }
+  .review-form-wrap h3{ font-family:'Fraunces', serif; font-weight:600; font-size:24px; margin-bottom:10px; }
+  #reviewForm textarea{ font-family:'Work Sans'; width:100%; }
+  #reviewForm textarea:focus{ border-color:var(--crimson); outline:none; }
+  #reviewStatus.error{ color:var(--crimson); }
+  #reviewStatus.success{ color:#2c7a4b; }
+
   /* ---------------- reserve / booking ---------------- */
   .reserve{ padding:150px 0 160px; background:var(--paper-dim); border-top:1px solid var(--line); }
   .reserve-grid{ display:grid; grid-template-columns:320px 1fr; gap:0; border:1px solid var(--line); background:var(--paper); }
@@ -493,6 +515,7 @@
 <nav id="siteNav">
   <a href="#services">Services</a>
   <a href="#work">The Work</a>
+  <a href="#reviews">Reviews</a>
   <a href="#reserve">Reserve</a>
   <a class="book-btn" href="#reserve">Book a Visit</a>
 </nav>
@@ -528,39 +551,8 @@
       <p class="section-note">Every car that enters the atelier is treated as the only one in the building that day.</p>
     </div>
   </div>
-  <div class="service-grid wrap" style="padding:0;">
-    <div class="service reveal">
-      <img class="service-img" src="images/service-diagnostic.jpg" alt="Diagnostic &amp; Mechanical Care" width="280" height="360" loading="lazy">
-      <span class="service-num">01</span>
-      <div class="service-text">
-        <h3>Diagnostic &amp; Mechanical Care</h3>
-        <p>Full inspection and precision repair, from a persistent rattle to a full engine rebuild.</p>
-      </div>
-    </div>
-    <div class="service reveal">
-      <img class="service-img" src="images/service-detailing.jpg" alt="Coachwork &amp; Detailing" width="280" height="360" loading="lazy">
-      <span class="service-num">02</span>
-      <div class="service-text">
-        <h3>Coachwork &amp; Detailing</h3>
-        <p>Paint correction, ceramic protection, and interior restoration by hand.</p>
-      </div>
-    </div>
-    <div class="service reveal">
-      <img class="service-img" src="images/service-restoration.jpg" alt="Bespoke Restoration" width="280" height="360" loading="lazy">
-      <span class="service-num">03</span>
-      <div class="service-text">
-        <h3>Bespoke Restoration</h3>
-        <p>Ground-up restorations for classic and rare marques, documented from teardown to reveal.</p>
-      </div>
-    </div>
-    <div class="service reveal">
-      <img class="service-img" src="images/service-concierge.jpg" alt="Concierge Collection" width="280" height="360" loading="lazy">
-      <span class="service-num">04</span>
-      <div class="service-text">
-        <h3>Concierge Collection</h3>
-        <p>We collect, deliver, and store your car, so the atelier is the only place it needs to go.</p>
-      </div>
-    </div>
+  <div class="service-grid wrap" id="serviceGrid" style="padding:0;">
+    <div class="service reveal in" style="min-height:120px; justify-content:center;"><p class="section-note">Loading services…</p></div>
   </div>
 </section>
 
@@ -579,63 +571,7 @@
 
   <div class="inner-wrap reveal">
     <div class="dossier-track" id="dossierTrack">
-
-      <div class="dossier">
-        <div class="dossier-photo">
-          <img src="images/mercedes-300ce.png" alt="1991 Mercedes 300CE" width="400" height="230" loading="lazy">
-          <span class="dossier-stamp">Closed — 9 days</span>
-        </div>
-        <div class="dossier-body">
-          <div class="dossier-vehicle">1991 Mercedes 300CE</div>
-          <div class="dossier-row"><span class="label">Reported</span><span class="value">Hesitation on cold start, uneven idle</span></div>
-          <div class="dossier-row"><span class="label">Resolution</span><span class="value">Rebuilt fuel distributor, replaced idle control valve</span></div>
-          <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">4.9 / 5.0</span></div>
-          <p class="dossier-quote">"It starts like it did in 1991. Better, honestly."</p>
-        </div>
-      </div>
- 
-      <div class="dossier">
-        <div class="dossier-photo">
-          <img src="images/porsche-911-gts.png" alt="2019 Porsche 911 GTS" width="400" height="230" loading="lazy">
-          <span class="dossier-stamp">Closed — 4 days</span>
-        </div>
-        <div class="dossier-body">
-          <div class="dossier-vehicle">2019 Porsche 911 GTS</div>
-          <div class="dossier-row"><span class="label">Reported</span><span class="value">Swirl marks and clouded headlights</span></div>
-          <div class="dossier-row"><span class="label">Resolution</span><span class="value">Two-stage paint correction, ceramic coat, headlight restoration</span></div>
-          <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">5.0 / 5.0</span></div>
-          <p class="dossier-quote">"Looked newer than the day I bought it."</p>
-        </div>
-      </div>
- 
-      <div class="dossier">
-        <div class="dossier-photo">
-          <img src="images/jaguar-e-type.png" alt="1974 Jaguar E-Type" width="400" height="230" loading="lazy">
-          <span class="dossier-stamp">Closed — 22 days</span>
-        </div>
-        <div class="dossier-body">
-          <div class="dossier-vehicle">1974 Jaguar E-Type</div>
-          <div class="dossier-row"><span class="label">Reported</span><span class="value">Full restoration after 30 years in storage</span></div>
-          <div class="dossier-row"><span class="label">Resolution</span><span class="value">Engine rebuild, wiring loom replaced, interior re-trimmed</span></div>
-          <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">5.0 / 5.0</span></div>
-          <p class="dossier-quote">"My father's car is finally mine to drive."</p>
-        </div>
-      </div>
- 
-      <div class="dossier">
-        <div class="dossier-photo">
-          <img src="images/range-rover.png" alt="2021 Range Rover Sport" width="400" height="230" loading="lazy">
-          <span class="dossier-stamp">Closed — 2 days</span>
-        </div>
-        <div class="dossier-body">
-          <div class="dossier-vehicle">2021 Range Rover Sport</div>
-          <div class="dossier-row"><span class="label">Reported</span><span class="value">Air suspension fault, dashboard warning</span></div>
-          <div class="dossier-row"><span class="label">Resolution</span><span class="value">Replaced rear air spring, recalibrated ride height sensors</span></div>
-          <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">4.8 / 5.0</span></div>
-          <p class="dossier-quote">"Explained the fix before I even asked."</p>
-        </div>
-      </div>
-
+      <div class="dossier"><div class="dossier-body"><p class="section-note">Loading recent work…</p></div></div>
     </div>
     <div class="dossier-nav">
       <button id="dossierPrev" aria-label="Previous">
@@ -644,6 +580,50 @@
       <button id="dossierNext" aria-label="Next">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
       </button>
+    </div>
+  </div>
+</section>
+
+<section class="reviews" id="reviews">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">In Their Words</span>
+        <h2>Owners on<br>the record.</h2>
+      </div>
+      <p class="section-note">Every review here comes from a real reservation at the atelier and is approved before it's shown.</p>
+    </div>
+    <div class="review-grid" id="reviewGrid">
+      <p class="section-note">Loading reviews…</p>
+    </div>
+
+    <div class="review-form-wrap reveal">
+      <h3>Leave a review</h3>
+      <p class="panel-note">Tell us how the atelier did. New reviews are checked by our team before they go live.</p>
+      <form id="reviewForm">
+        <div class="field-grid">
+          <div class="field"><label>Your Name</label><input type="text" id="reviewName" placeholder="e.g. J. Alden" required></div>
+          <div class="field"><label>Vehicle (optional)</label><input type="text" id="reviewVehicle" placeholder="e.g. 2019 Porsche 911 GTS"></div>
+        </div>
+        <div class="field" style="margin-top:22px; max-width:220px;">
+          <label>Rating</label>
+          <select id="reviewRating">
+            <option value="5">5 — Excellent</option>
+            <option value="4">4 — Great</option>
+            <option value="3">3 — Good</option>
+            <option value="2">2 — Fair</option>
+            <option value="1">1 — Poor</option>
+          </select>
+        </div>
+        <div class="field" style="margin-top:22px;">
+          <label>Review</label>
+          <textarea id="reviewComment" rows="3" required placeholder="How did the atelier handle your car?" style="border:none; border-bottom:1px solid var(--line); background:transparent; padding:10px 0; font-family:'Work Sans'; font-size:16px; resize:vertical;"></textarea>
+        </div>
+        <div class="panel-actions">
+          <span id="reviewStatus" class="section-note" style="max-width:none;"></span>
+          <button type="submit" class="btn-primary">Submit Review</button>
+        </div>
+      </form>
     </div>
   </div>
 </section>
@@ -687,18 +667,7 @@
           <h3>What does the car need?</h3>
           <p class="panel-note">Select one. If more than one applies, choose the primary concern — we'll cover the rest during intake.</p>
           <div class="option-grid" id="serviceOptions">
-            <div class="option selected" data-name="Diagnostic & Mechanical Care" data-price="From $150">
-              <div class="opt-name">Diagnostic &amp; Mechanical Care</div><div class="opt-price">From $150</div>
-            </div>
-            <div class="option" data-name="Coachwork & Detailing" data-price="From $250">
-              <div class="opt-name">Coachwork &amp; Detailing</div><div class="opt-price">From $250</div>
-            </div>
-            <div class="option" data-name="Bespoke Restoration" data-price="Quoted after intake">
-              <div class="opt-name">Bespoke Restoration</div><div class="opt-price">Quoted after intake</div>
-            </div>
-            <div class="option" data-name="Concierge Collection" data-price="From $75">
-              <div class="opt-name">Concierge Collection</div><div class="opt-price">From $75</div>
-            </div>
+            <div class="option"><div class="opt-name">Loading services…</div></div>
           </div>
           <div class="panel-actions">
             <span></span>
@@ -726,19 +695,10 @@
           <p class="panel-note">Slots reflect the atelier's real capacity — only one car is worked at a time per bay.</p>
           <div class="field" style="margin-bottom:26px; max-width:240px;">
             <label>Date</label>
-            <input type="text" id="carDate" placeholder="Tue, 14 July" value="Tue, 14 July">
+            <input type="date" id="carDate">
           </div>
           <label class="eyebrow" style="color:var(--charcoal); display:block; margin-bottom:10px;">Available Slots</label>
-          <div class="time-grid" id="timeGrid">
-            <div class="time">09:00</div>
-            <div class="time selected">10:30</div>
-            <div class="time">12:00</div>
-            <div class="time unavailable">13:30</div>
-            <div class="time">15:00</div>
-            <div class="time unavailable">16:30</div>
-            <div class="time">18:00</div>
-            <div class="time">19:30</div>
-          </div>
+          <div class="time-grid" id="timeGrid"></div>
           <div class="panel-actions">
             <button class="btn-ghost" data-back="2">Back</button>
             <button class="btn-primary" data-next="4">Continue</button>
@@ -756,8 +716,8 @@
             <div class="ledger-row"><span class="l-label">Estimate</span><span class="l-value" id="sumPrice">From $150</span></div>
           </div>
           <div class="field-grid">
-            <div class="field"><label>Full Name</label><input type="text" placeholder="Your name"></div>
-            <div class="field"><label>Phone</label><input type="text" placeholder="(512) 555-0199"></div>
+            <div class="field"><label>Full Name</label><input type="text" id="customerName" placeholder="Your name"></div>
+            <div class="field"><label>Phone</label><input type="text" id="customerPhone" placeholder="(512) 555-0199"></div>
           </div>
           <div class="panel-actions">
             <button class="btn-ghost" data-back="3">Back</button>
@@ -775,7 +735,7 @@
           </div>
           <p class="panel-note">We'll call to confirm intake details. Your slot is held for 24 hours.</p>
           <div class="ledger">
-            <div class="ledger-row"><span class="l-label">Confirmation</span><span class="l-value">CRM-08421</span></div>
+            <div class="ledger-row"><span class="l-label">Confirmation</span><span class="l-value" id="doneConfirmation">—</span></div>
             <div class="ledger-row"><span class="l-label">Service</span><span class="l-value" id="doneService">—</span></div>
             <div class="ledger-row"><span class="l-label">Arrive</span><span class="l-value" id="doneDate">—</span></div>
           </div>
@@ -858,32 +818,198 @@
   }, { threshold:0.08 });
   document.querySelectorAll('.reveal, .reveal-line').forEach(el => io.observe(el));
 
+  // ---------------- API-backed data ----------------
+  const API_BASE = '/api';
+
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+
   // Dossier slider
   const track = document.getElementById('dossierTrack');
-  const cardWidth = () => track.querySelector('.dossier').offsetWidth + 2;
+  const cardWidth = () => {
+    const el = track.querySelector('.dossier');
+    return el ? el.offsetWidth + 2 : 0;
+  };
   document.getElementById('dossierNext').addEventListener('click', () => track.scrollBy({ left: cardWidth(), behavior:'smooth' }));
   document.getElementById('dossierPrev').addEventListener('click', () => track.scrollBy({ left: -cardWidth(), behavior:'smooth' }));
 
-  // Service option select
-  let selectedService = { name:'Diagnostic & Mechanical Care', price:'From $150' };
-  document.querySelectorAll('#serviceOptions .option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      document.querySelectorAll('#serviceOptions .option').forEach(o => o.classList.remove('selected'));
-      opt.classList.add('selected');
-      selectedService = { name: opt.dataset.name, price: opt.dataset.price };
-      updateStepLockStates();
-    });
+  async function loadWork() {
+    try {
+      const res = await fetch(`${API_BASE}/work`);
+      const items = await res.json();
+      if (!Array.isArray(items) || items.length === 0) {
+        track.innerHTML = '<div class="dossier"><div class="dossier-body"><p class="section-note">No work on file yet.</p></div></div>';
+        return;
+      }
+      track.innerHTML = items.map(item => `
+        <div class="dossier">
+          <div class="dossier-photo">
+            <img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.vehicle)}" width="400" height="230" loading="lazy">
+            <span class="dossier-stamp">${escapeHtml(item.statusLabel)}</span>
+          </div>
+          <div class="dossier-body">
+            <div class="dossier-vehicle">${escapeHtml(item.vehicle)}</div>
+            <div class="dossier-row"><span class="label">Reported</span><span class="value">${escapeHtml(item.reported)}</span></div>
+            <div class="dossier-row"><span class="label">Resolution</span><span class="value">${escapeHtml(item.resolution)}</span></div>
+            <div class="dossier-row"><span class="label">Owner Rating</span><span class="value dossier-rating">${Number(item.rating).toFixed(1)} / 5.0</span></div>
+            ${item.quote ? `<p class="dossier-quote">"${escapeHtml(item.quote)}"</p>` : ''}
+          </div>
+        </div>
+      `).join('');
+    } catch (err) {
+      track.innerHTML = '<div class="dossier"><div class="dossier-body"><p class="section-note">Could not load recent work right now.</p></div></div>';
+    }
+  }
+
+  // Services (the "What We Do" grid)
+  const serviceGrid = document.getElementById('serviceGrid');
+  let servicesData = [];
+
+  async function loadServices() {
+    try {
+      const res = await fetch(`${API_BASE}/services`);
+      servicesData = await res.json();
+      if (!Array.isArray(servicesData) || servicesData.length === 0) {
+        serviceGrid.innerHTML = '<div class="service reveal in"><p class="section-note">No services listed yet.</p></div>';
+      } else {
+        serviceGrid.innerHTML = servicesData.map(s => `
+          <div class="service reveal in">
+            <img class="service-img" src="${escapeHtml(s.imageUrl)}" alt="${escapeHtml(s.title)}" width="280" height="360" loading="lazy">
+            <span class="service-num">${escapeHtml(s.numberLabel)}</span>
+            <div class="service-text">
+              <h3>${escapeHtml(s.title)}</h3>
+              <p>${escapeHtml(s.description)}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    } catch (err) {
+      servicesData = [];
+      serviceGrid.innerHTML = '<div class="service reveal in"><p class="section-note">Could not load services right now.</p></div>';
+    }
+    renderServiceOptions();
+  }
+
+  // Reviews
+  const reviewGrid = document.getElementById('reviewGrid');
+
+  async function loadReviews() {
+    try {
+      const res = await fetch(`${API_BASE}/reviews`);
+      const reviews = await res.json();
+      if (!Array.isArray(reviews) || reviews.length === 0) {
+        reviewGrid.innerHTML = '<p class="section-note">Be the first to leave a review.</p>';
+        return;
+      }
+      reviewGrid.innerHTML = reviews.map(r => `
+        <div class="review-card">
+          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+          <p class="review-comment">"${escapeHtml(r.comment)}"</p>
+          <div class="review-meta">${escapeHtml(r.authorName)}${r.vehicle ? ` <span class="review-vehicle">— ${escapeHtml(r.vehicle)}</span>` : ''}</div>
+        </div>
+      `).join('');
+    } catch (err) {
+      reviewGrid.innerHTML = '<p class="section-note">Could not load reviews right now.</p>';
+    }
+  }
+
+  const reviewForm = document.getElementById('reviewForm');
+  const reviewStatus = document.getElementById('reviewStatus');
+  reviewForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    reviewStatus.textContent = '';
+    reviewStatus.className = 'section-note';
+    const authorName = document.getElementById('reviewName').value.trim();
+    const vehicle = document.getElementById('reviewVehicle').value.trim();
+    const rating = document.getElementById('reviewRating').value;
+    const comment = document.getElementById('reviewComment').value.trim();
+    if (!authorName || !comment) return;
+    try {
+      const res = await fetch(`${API_BASE}/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ authorName, vehicle, rating, comment }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+      reviewStatus.textContent = data.message || 'Thanks for your review!';
+      reviewStatus.classList.add('success');
+      reviewForm.reset();
+    } catch (err) {
+      reviewStatus.textContent = err.message;
+      reviewStatus.classList.add('error');
+    }
   });
 
-  // Time slot select
-  let selectedTime = '10:30';
-  document.querySelectorAll('.time:not(.unavailable)').forEach(t => {
-    t.addEventListener('click', () => {
-      document.querySelectorAll('.time').forEach(o => o.classList.remove('selected'));
-      t.classList.add('selected');
-      selectedTime = t.textContent.trim();
-      updateStepLockStates();
+  // Service option select (reservation step 1)
+  const serviceOptionsEl = document.getElementById('serviceOptions');
+  let selectedService = null;
+
+  function renderServiceOptions() {
+    if (!Array.isArray(servicesData) || servicesData.length === 0) return;
+    serviceOptionsEl.innerHTML = servicesData.map((s, i) => `
+      <div class="option${i === 0 ? ' selected' : ''}" data-name="${escapeHtml(s.title)}" data-price="${escapeHtml(s.priceLabel)}">
+        <div class="opt-name">${escapeHtml(s.title)}</div><div class="opt-price">${escapeHtml(s.priceLabel)}</div>
+      </div>
+    `).join('');
+    selectedService = { name: servicesData[0].title, price: servicesData[0].priceLabel };
+    bindServiceOptions();
+    updateStepLockStates();
+  }
+
+  function bindServiceOptions() {
+    document.querySelectorAll('#serviceOptions .option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('#serviceOptions .option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        selectedService = { name: opt.dataset.name, price: opt.dataset.price };
+        updateStepLockStates();
+      });
     });
+  }
+
+  // Time slots — loaded from the API based on the chosen date
+  const timeGrid = document.getElementById('timeGrid');
+  let selectedTime = null;
+
+  function bindTimeSlots() {
+    document.querySelectorAll('.time:not(.unavailable)').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('.time').forEach(o => o.classList.remove('selected'));
+        t.classList.add('selected');
+        selectedTime = t.textContent.trim();
+        updateStepLockStates();
+      });
+    });
+  }
+
+  async function loadTimeSlots(date) {
+    selectedTime = null;
+    if (!date) {
+      timeGrid.innerHTML = '<p class="section-note">Choose a date to see available slots.</p>';
+      updateStepLockStates();
+      return;
+    }
+    timeGrid.innerHTML = '<p class="section-note">Loading slots…</p>';
+    try {
+      const res = await fetch(`${API_BASE}/reservations/availability?date=${encodeURIComponent(date)}`);
+      const data = await res.json();
+      timeGrid.innerHTML = data.slots.map(s => `<div class="time${s.available ? '' : ' unavailable'}">${s.time}</div>`).join('');
+      const firstAvailable = timeGrid.querySelector('.time:not(.unavailable)');
+      if (firstAvailable) {
+        firstAvailable.classList.add('selected');
+        selectedTime = firstAvailable.textContent.trim();
+      }
+      bindTimeSlots();
+    } catch (err) {
+      timeGrid.innerHTML = '<p class="section-note">Could not load slots. Try another date.</p>';
+    }
+    updateStepLockStates();
+  }
+
+  document.getElementById('carDate').addEventListener('change', (e) => {
+    loadTimeSlots(e.target.value);
   });
 
   // Stepper logic & Validation
@@ -892,7 +1018,7 @@
 
   function isStepValid(stepNum) {
     if (stepNum === 1) {
-      return true; // Service is selected by default
+      return !!selectedService;
     }
     if (stepNum === 2) {
       const make = document.getElementById('carMake').value.trim();
@@ -903,7 +1029,7 @@
     }
     if (stepNum === 3) {
       const date = document.getElementById('carDate').value.trim();
-      return date !== '' && selectedTime !== '';
+      return date !== '' && !!selectedTime;
     }
     return true;
   }
@@ -974,29 +1100,65 @@
 
   document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => goTo(b.dataset.back)));
 
-  document.getElementById('confirmBtn').addEventListener('click', (e) => {
-    if (!isStepValid(2) || !isStepValid(3)) {
-      e.preventDefault();
+  const confirmBtn = document.getElementById('confirmBtn');
+  confirmBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (!isStepValid(1) || !isStepValid(2) || !isStepValid(3)) {
       highlightErrors();
       return;
     }
-    const make = document.getElementById('carMake').value || 'Your vehicle';
-    const model = document.getElementById('carModel').value || '';
-    const date = document.getElementById('carDate').value || 'Tue, 14 July';
+    const make = document.getElementById('carMake').value.trim();
+    const model = document.getElementById('carModel').value.trim();
+    const year = document.getElementById('carYear').value.trim();
+    const mileage = document.getElementById('carMileage').value.trim();
+    const date = document.getElementById('carDate').value;
+    const fullName = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
     const vehicle = (make + ' ' + model).trim();
 
-    document.getElementById('sumService').textContent = selectedService.name;
-    document.getElementById('sumVehicle').textContent = vehicle || '—';
-    document.getElementById('sumDate').textContent = date;
-    document.getElementById('sumTime').textContent = selectedTime;
-    document.getElementById('sumPrice').textContent = selectedService.price;
+    if (!fullName || !phone) {
+      alert('Please enter your name and phone number to reserve your slot.');
+      return;
+    }
 
-    document.getElementById('doneService').textContent = selectedService.name;
-    document.getElementById('doneDate').textContent = date + ', ' + selectedTime;
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Reserving…';
 
-    panels.forEach(p => p.classList.remove('active'));
-    document.querySelector('[data-panel="done"]').classList.add('active');
-    steps.forEach(s => s.classList.remove('active'));
+    try {
+      const res = await fetch(`${API_BASE}/reservations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceName: selectedService.name,
+          servicePrice: selectedService.price,
+          make, model, year, mileage,
+          date, time: selectedTime,
+          fullName, phone,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Could not complete your reservation.');
+
+      document.getElementById('sumService').textContent = selectedService.name;
+      document.getElementById('sumVehicle').textContent = vehicle || '—';
+      document.getElementById('sumDate').textContent = date;
+      document.getElementById('sumTime').textContent = selectedTime;
+      document.getElementById('sumPrice').textContent = selectedService.price;
+
+      document.getElementById('doneService').textContent = selectedService.name;
+      document.getElementById('doneDate').textContent = date + ', ' + selectedTime;
+      document.getElementById('doneConfirmation').textContent = data.confirmationCode;
+
+      panels.forEach(p => p.classList.remove('active'));
+      document.querySelector('[data-panel="done"]').classList.add('active');
+      steps.forEach(s => s.classList.remove('active'));
+    } catch (err) {
+      alert(err.message);
+      if (err.message.includes('slot')) loadTimeSlots(date);
+    } finally {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Reserve My Slot';
+    }
   });
 
   // Keep summary in sync & update locks
@@ -1017,6 +1179,15 @@
 
   // Call initially to lock subsequent steps
   updateStepLockStates();
+
+  // Set a sensible minimum date (today) and kick off data loads
+  const carDateInput = document.getElementById('carDate');
+  carDateInput.min = new Date().toISOString().slice(0, 10);
+  loadTimeSlots('');
+
+  loadServices();
+  loadWork();
+  loadReviews();
 </script>
 
 </body>
