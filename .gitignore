@@ -1,7 +1,11 @@
 node_modules/
 server/node_modules/
+.env
 server/.env
+*.db
+*.db-journal
 server/uploads/*
 !server/uploads/.gitkeep
 .DS_Store
 *.log
+
